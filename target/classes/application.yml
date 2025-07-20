@@ -1,0 +1,37 @@
+server:
+  port: 8086
+
+
+spring:
+  application:
+    name: data-upload
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/video_data?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+#    username: root
+#    password: your_password
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# 飞书配置
+feishu:
+  app-id: cli_a8f65912ba29100b
+  app-secret: PsIOYQ9TdFRq6YgYFIXeQgjXTZKMxc4H
+  # app-token: HU1lbdym8aWbpwsxxBIcKlRHnac
+  # account-table-id: tbl5JLXuFfBWQkVo
+  # video-table-id: tbl94LiWoyciS4aD
+  app-token: Upenb6egpanEAvsux99cVa92nAf
+  account-table-id: tblR3shaNbmhkSQC
+  video-table-id: tblMU0i9sUMvCLaB
