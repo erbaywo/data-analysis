@@ -119,25 +119,4 @@ public class UploadController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * 初始化飞书表格（管理员功能）
-     */
-    @PostMapping("/api/admin/init-tables")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> initializeTables() {
-        Map<String, Object> response = new HashMap<>();
-
-        try {
-            Map<String, Object> result = uploadService.initializeFeishuTables();
-            response.put("data", result);
-            response.put("success", true);
-            response.put("message", "初始化成功");
-        } catch (Exception e) {
-//            log.error("初始化飞书表格异常", e);
-            response.put("success", false);
-            response.put("message", "初始化失败：" + e.getMessage());
-        }
-
-        return ResponseEntity.ok(response);
-    }
 }

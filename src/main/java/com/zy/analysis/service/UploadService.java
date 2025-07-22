@@ -105,49 +105,5 @@ public class UploadService {
         }
     }
 
-    /**
-     * 初始化飞书表格（仅在首次使用时调用）
-     */
-    public Map<String, Object> initializeFeishuTables() {
-        Map<String,Object> result = new HashMap<>();
-        try {
-            //创建多维表格
-            App app = feishuService.createBitable("视频监控数据分析表");
-            if (app == null) {
-                result.put("result", false);
-                return result;
-            }
-            String appToken = app.getAppToken();
-            // 创建账号数据表
-            String accountTableId = feishuService.createTable(
-                    appToken,
-                    "微信视频号账号数据",
-                    feishuService.createAccountFields()
-            );
 
-            // 创建视频数据表
-            String videoTableId = feishuService.createTable(
-                    appToken,
-                    "微信视频号视频数据",
-                    feishuService.createVideoFields()
-            );
-
-            log.info("账号数据表ID: {}", accountTableId);
-            log.info("视频数据表ID: {}", videoTableId);
-
-            feishuConfig.setAccountTableId(accountTableId);
-            feishuConfig.setVideoTableId(videoTableId);
-            feishuConfig.setAppToken(appToken);
-
-            result.put("result", accountTableId != null && videoTableId != null);
-            result.put("accountTableId", accountTableId);
-            result.put("videoTableId", videoTableId);
-            result.put("appToken", appToken);
-            result.put("url", app.getUrl());
-            return result;
-        } catch (Exception e) {
-            log.error("初始化飞书表格异常", e);
-            return null;
-        }
-    }
 }

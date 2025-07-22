@@ -41,8 +41,4 @@ public class VideoData {
     private Integer coverCount; // 设为朋友圈封面
 
     private LocalDateTime createdAt;
-
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
 }

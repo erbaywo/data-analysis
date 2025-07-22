@@ -138,46 +138,4 @@ public class CsvService {
             return 0L;
         }
     }
-
-    private Double parseDouble(String value) {
-        if (value == null || value.trim().isEmpty() || "-".equals(value.trim())) {
-            return 0.0;
-        }
-        try {
-            String cleanValue = value.trim().replace("%", "").replace(",", "");
-            return Double.parseDouble(cleanValue);
-        } catch (NumberFormatException e) {
-            log.warn("解析小数失败: {}", value);
-            return 0.0;
-        }
-    }
-
-    private LocalDateTime parseDateTime(String value) {
-        if (value == null || value.trim().isEmpty() || "-".equals(value.trim())) {
-            return null;
-        }
-        try {
-            // 尝试多种日期时间格式
-            DateTimeFormatter[] formatters = {
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
-                    DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"),
-                    DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"),
-                    DateTimeFormatter.ofPattern("yyyy/MM/dd")
-            };
-
-            for (DateTimeFormatter formatter : formatters) {
-                try {
-                    return LocalDateTime.parse(value.trim(), formatter);
-                } catch (Exception ignored) {
-                    // 继续尝试下一个格式
-                }
-            }
-            log.warn("解析日期时间失败: {}", value);
-            return null;
-        } catch (Exception e) {
-            log.warn("解析日期时间异常: {}", value, e);
-            return null;
-        }
-    }
 }
