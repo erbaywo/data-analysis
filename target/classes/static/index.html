@@ -301,9 +301,6 @@
         <h1>微信视频号数据上传助手</h1>
         <p>请选择要上传的数据类型，并上传对应的CSV文件</p>
         <div>
-            <button class="init-btn" onclick="initializeTables()">
-                🔧 初始化数据库表
-            </button>
             <a href="https://ocn8o3ghsdb2.feishu.cn/share/base/dashboard/shrcnFWLAZb1airEoMfjGY0KCMe"
                target="_blank" class="dashboard-link">
                 📈 查看数据分析看板
@@ -436,39 +433,6 @@
         setTimeout(() => {
             showProgress(progressBarId, false);
         }, 500);
-    }
-
-    // 初始化数据库表
-    async function initializeTables() {
-        const btn = event.target;
-        const originalText = btn.textContent;
-
-        btn.disabled = true;
-        btn.textContent = '初始化中...';
-
-        try {
-            const response = await fetch('/api/admin/init-tables', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                showMessage('success', '数据库表初始化成功！');
-                btn.textContent = '✅ 初始化完成';
-                btn.style.background = '#28a745';
-            } else {
-                throw new Error(result.message || '初始化失败');
-            }
-        } catch (error) {
-            console.error('初始化失败:', error);
-            showMessage('error', '初始化失败: ' + error.message);
-            btn.textContent = originalText;
-            btn.disabled = false;
-        }
     }
 
     // 上传文件

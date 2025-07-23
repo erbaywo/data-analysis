@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第三方授权测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .btn-success {
+            background-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #1e7e34;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>第三方授权测试页面</h1>
+
+        <div>
+            <h3>1. 开始授权</h3>
+            <p>选择要进行授权的平台：</p>
+            <a href="/api/douyin/auth" class="btn">抖音授权</a>
+            <a href="/api/feishu/auth" class="btn btn-success">飞书授权</a>
+        </div>
+        
+        <div>
+            <h3>2. 查询用户信息</h3>
+            <div class="input-group">
+                <label for="platform">选择平台：</label>
+                <select id="platform" class="form-input">
+                    <option value="douyin">抖音</option>
+                    <option value="feishu">飞书</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="openId">输入 OpenId：</label>
+                <input type="text" id="openId" placeholder="请输入用户的 OpenId">
+            </div>
+            <button class="btn btn-success" onclick="queryUser()">查询用户信息</button>
+        </div>
+        
+        <div id="result" class="result" style="display: none;">
+            <h4>结果：</h4>
+            <pre id="resultContent"></pre>
+        </div>
+    </div>
+
+    <script>
+        function queryUser() {
+            const platform = document.getElementById('platform').value;
+            const openId = document.getElementById('openId').value;
+            if (!openId) {
+                alert('请输入 OpenId');
+                return;
+            }
+
+            const apiUrl = `/api/${platform}/user/${openId}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('resultContent').textContent = JSON.stringify(data, null, 2);
+                    document.getElementById('result').style.display = 'block';
+                })
+                .catch(error => {
+                    document.getElementById('resultContent').textContent = '查询失败: ' + error.message;
+                    document.getElementById('result').style.display = 'block';
+                });
+        }
+        
+        // 检查URL参数，如果有授权回调的信息，显示结果
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            if (code) {
+                document.getElementById('resultContent').textContent = '授权成功！授权码: ' + code;
+                document.getElementById('result').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+docker run -d \
+--name mysql8.0 \
+--restart unless-stopped \
+-e MYSQL_ROOT_PASSWORD=123456 \
+-e MYSQL_DATABASE=data-analysis \
+-p 3306:3306 \
+-v mysql8_data:/var/lib/mysql \
+mysql:8.0.23 \
+--character-set-server=utf8mb4 \
+--collation-server=utf8mb4_unicode_ci \
+--default-authentication-plugin=mysql_native_password

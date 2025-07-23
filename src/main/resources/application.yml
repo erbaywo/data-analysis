@@ -1,29 +1,44 @@
+# 服务器配置
 server:
-  port: 8086
+  port: 9080  # 服务端口，可根据需要修改
 
-
+# Spring 配置
 spring:
   application:
-    name: data-upload
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/video_data?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
-#    username: root
-#    password: your_password
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+    name: oa-system  # 应用名称
 
+  # 数据库配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/data-analysis?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # JPA 配置
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: update  # 自动创建/更新表结构
+    show-sql: true  # 显示 SQL 语句
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true  # 格式化 SQL 输出
 
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+# 日志配置
+logging:
+  level:
+    root: INFO  # 根日志级别
+    org.springframework.web: INFO  # Spring Web 日志级别
+    org.yc.analysis: DEBUG  # 项目自定义包日志级别，方便调试
+springdoc:
+  packages-to-scan: org.yc.oa.controller
+
+douyin:
+  client-id: awc23rrtn8rtoqrk
+  client-secret: 584c1636208b8bd54fe7eb76d3cb5205
+  redirect-uri: http://localhost:9080/api/douyin/callback
+
+
 
 # 飞书配置
 feishu:
@@ -35,3 +50,4 @@ feishu:
   app-token: Upenb6egpanEAvsux99cVa92nAf
   account-table-id: tblR3shaNbmhkSQC
   video-table-id: tblMU0i9sUMvCLaB
+

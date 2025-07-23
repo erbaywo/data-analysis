@@ -1,0 +1,20 @@
+@startuml
+actor User as 用户
+participant "前端" as Web
+participant "后端服务" as Server
+participant "平台" as Douyin
+
+用户 -> Web: 点击登录
+Web -> Server: GET /api/douyin/auth
+Server --> Web: 返回302重定向
+Web -> Douyin: 自动跳转授权页面
+用户 -> Douyin: 输入账号密码授权
+Douyin --> Web: 302回调到/api/douyin/callback?code=xxx
+Web -> Server: GET /api/douyin/callback
+Server -> Douyin: POST 用code换取access_token
+Douyin --> Server: 返回access_token和openid
+Server -> Douyin: GET 获取用户信息
+Douyin --> Server: 返回用户基本信息
+Server -> Server: 加密存储用户信息
+Server --> Web: 返回登录成功响应
+@enduml
