@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.yc.analysis.common.response.ResponseResult;
+import org.yc.analysis.model.DouyinUserInfo;
 import org.yc.analysis.service.DouyinService;
 
 import java.io.IOException;
@@ -47,22 +50,22 @@ public class DouyinAuthController {
      * 抖音授权回调接口
      * 抖音授权成功后会回调此接口，携带授权码code
      */
-//    @GetMapping("/callback")
-//    @Operation(summary = "抖音授权回调", description = "处理抖音授权回调，获取用户信息并保存")
-//    public ResponseResult<DouyinUserInfo> callback(
-//            @Parameter(description = "抖音授权码", required = true)
-//            @RequestParam String code) {
-//        try {
-//            log.info("收到抖音授权回调，code: {}", code);
-//            DouyinUserInfo userInfo = douyinService.handleCallback(code);
-//            log.info("抖音授权处理成功，用户: {}", userInfo.getNickname());
-//            return ResponseResult.success(userInfo);
-//        } catch (Exception e) {
-//            log.error("抖音授权回调处理失败", e);
-//            throw e;
-//        }
-//    }
-//
+    @GetMapping("/callback")
+    @Operation(summary = "抖音授权回调", description = "处理抖音授权回调，获取用户信息并保存")
+    public ResponseResult<DouyinUserInfo> callback(
+            @Parameter(description = "抖音授权码", required = true)
+            @RequestParam String code) {
+        try {
+            log.info("收到抖音授权回调，code: {}", code);
+            DouyinUserInfo userInfo = douyinService.handleCallback(code);
+            log.info("抖音授权处理成功，用户: {}", userInfo.getNickname());
+            return ResponseResult.success(userInfo);
+        } catch (Exception e) {
+            log.error("抖音授权回调处理失败", e);
+            throw e;
+        }
+    }
+
 //    /**
 //     * 根据 openId 查询用户信息
 //     */

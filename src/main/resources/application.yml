@@ -36,7 +36,7 @@ springdoc:
 douyin:
   client-id: awc23rrtn8rtoqrk
   client-secret: 584c1636208b8bd54fe7eb76d3cb5205
-  redirect-uri: http://localhost:9080/api/douyin/callback
+  redirect-uri: https://1ec494339829.ngrok-free.app/api/douyin/callback
 
 
 
