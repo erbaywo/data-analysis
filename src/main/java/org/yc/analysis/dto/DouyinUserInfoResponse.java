@@ -5,16 +5,34 @@ import lombok.Data;
 
 /**
  * 抖音获取用户信息响应
+ * {
+ *   "err_msg": "",
+ *   "log_id": "2025032716200991A1xxxxx30A01C4DF",
+ *   "data": {
+ *     "open_id": "qYm3LVbtDQ",
+ *     "nickname": "李伟",
+ *     "description": "",
+ *     "e_account_role": "",
+ *     "error_code": "0",
+ *     "avatar": "https://xxx.com/xxx.jpeg",
+ *     "client_key": "XQSXAWkY9f",
+ *     "log_id": "2025032716200991A181xxxxx0A01C4DF",
+ *     "union_id": "eVBXUMlnek"
+ *   },
+ *   "err_no": 0
+ * }
  */
 @Data
 public class DouyinUserInfoResponse {
     
-    @JsonProperty("error_code")
+    @JsonProperty("err_no")
     private Integer errorCode;
-    
-    @JsonProperty("description")
-    private String description;
-    
+
+    @JsonProperty("err_msg")
+    private String errorMsg;
+    @JsonProperty("log_id")
+    private String logId;
+
     @JsonProperty("data")
     private UserData data;
     
@@ -32,17 +50,17 @@ public class DouyinUserInfoResponse {
         
         @JsonProperty("avatar")
         private String avatar;
-        
-        @JsonProperty("gender")
-        private Integer gender;
-        
-        @JsonProperty("country")
-        private String country;
-        
-        @JsonProperty("province")
-        private String province;
-        
-        @JsonProperty("city")
-        private String city;
+
+        @JsonProperty("description")
+        private String description;
+
+        @JsonProperty("e_account_role")
+        private String eAccountRole;
+
+        @JsonProperty("client_key")
+        private String clientKey;
+
+
+
     }
 }

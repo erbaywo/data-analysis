@@ -73,7 +73,7 @@ public class DouyinService {
             // 2. 获取用户信息
             DouyinUserInfoResponse userInfoResponse = getUserInfo(tokenResponse.getAccessToken(), tokenResponse.getOpenId());
             if (userInfoResponse.getErrorCode() != null && userInfoResponse.getErrorCode() != 0) {
-                throw new BusinessException("获取用户信息失败: " + userInfoResponse.getDescription());
+                throw new BusinessException("获取用户信息失败: " + userInfoResponse.getData().getDescription());
             }
 
             // 3. 保存用户信息到数据库
@@ -108,7 +108,6 @@ public class DouyinService {
                     .retrieve()
                     .bodyToMono(DouyinTokenResponse.class)
                     .block();
-
             log.info("获取访问令牌响应: {}", response);
             return response;
 
@@ -169,10 +168,6 @@ public class DouyinService {
             userInfo.setUnionId(userData.getUnionId());
             userInfo.setNickname(userData.getNickname());
             userInfo.setAvatar(userData.getAvatar());
-            userInfo.setGender(userData.getGender());
-            userInfo.setCountry(userData.getCountry());
-            userInfo.setProvince(userData.getProvince());
-            userInfo.setCity(userData.getCity());
 
             // 更新令牌信息
             userInfo.setAccessToken(tokenResponse.getAccessToken());
