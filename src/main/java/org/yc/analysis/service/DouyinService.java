@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.yc.analysis.dto.DouyinDataResponse;
 import org.yc.analysis.dto.DouyinTokenResponse;
 import org.yc.analysis.dto.DouyinUserInfoResponse;
 import org.yc.analysis.exception.BusinessException;
@@ -36,6 +37,14 @@ public class DouyinService {
     // 抖音 API 地址
     private static final String DOUYIN_TOKEN_URL = "https://open.douyin.com/oauth/access_token/";
     private static final String DOUYIN_USER_INFO_URL = "https://open.douyin.com/oauth/userinfo/";
+
+    // 抖音数据 API 地址
+    private static final String DOUYIN_FANS_DATA_URL = "https://open.douyin.com/api/douyin/v1/data/external/user/fans/";
+    private static final String DOUYIN_VIDEO_DATA_URL = "https://open.douyin.com/api/douyin/v1/data/external/user/item/";
+    private static final String DOUYIN_LIKE_DATA_URL = "https://open.douyin.com/api/douyin/v1/data/external/user/like/";
+    private static final String DOUYIN_COMMENT_DATA_URL = "https://open.douyin.com/api/douyin/v1/data/external/user/comment/";
+    private static final String DOUYIN_SHARE_DATA_URL = "https://open.douyin.com/api/douyin/v1/data/external/user/share/";
+    private static final String DOUYIN_PROFILE_DATA_URL = "https://open.douyin.com/api/douyin/v1/data/external/user/profile/";
 
     /**
      * 构建授权URL
@@ -195,5 +204,77 @@ public class DouyinService {
         log.info("查询用户信息，openId: {}", openId);
         return userInfoRepository.findByOpenId(openId)
                 .orElseThrow(() -> new BusinessException("用户不存在"));
+    }
+
+    /**
+     * 获取粉丝数据
+     */
+    public DouyinDataResponse getFansData(String accessToken, String openId, String beginDate, String endDate) {
+        return getUserDataByType(DOUYIN_FANS_DATA_URL, accessToken, openId, beginDate, endDate, "粉丝");
+    }
+
+    /**
+     * 获取视频数据
+     */
+    public DouyinDataResponse getVideoData(String accessToken, String openId, String beginDate, String endDate) {
+        return getUserDataByType(DOUYIN_VIDEO_DATA_URL, accessToken, openId, beginDate, endDate, "视频");
+    }
+
+    /**
+     * 获取点赞数据
+     */
+    public DouyinDataResponse getLikeData(String accessToken, String openId, String beginDate, String endDate) {
+        return getUserDataByType(DOUYIN_LIKE_DATA_URL, accessToken, openId, beginDate, endDate, "点赞");
+    }
+
+    /**
+     * 获取评论数据
+     */
+    public DouyinDataResponse getCommentData(String accessToken, String openId, String beginDate, String endDate) {
+        return getUserDataByType(DOUYIN_COMMENT_DATA_URL, accessToken, openId, beginDate, endDate, "评论");
+    }
+
+    /**
+     * 获取分享数据
+     */
+    public DouyinDataResponse getShareData(String accessToken, String openId, String beginDate, String endDate) {
+        return getUserDataByType(DOUYIN_SHARE_DATA_URL, accessToken, openId, beginDate, endDate, "分享");
+    }
+
+    /**
+     * 获取主页访问数据
+     */
+    public DouyinDataResponse getProfileData(String accessToken, String openId, String beginDate, String endDate) {
+        return getUserDataByType(DOUYIN_PROFILE_DATA_URL, accessToken, openId, beginDate, endDate, "主页访问");
+    }
+
+    /**
+     * 通用数据获取方法
+     */
+    private DouyinDataResponse getUserDataByType(String url, String accessToken, String openId,
+                                                String beginDate, String endDate, String dataType) {
+        try {
+            log.info("开始获取{}数据，openId: {}, 时间范围: {} - {}", dataType, openId, beginDate, endDate);
+
+            DouyinDataResponse response = webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(url)
+                            .queryParam("access_token", accessToken)
+                            .queryParam("open_id", openId)
+                            .queryParam("date_type", "7")
+                            .queryParam("begin_date", beginDate)
+                            .queryParam("end_date", endDate)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(DouyinDataResponse.class)
+                    .block();
+
+            log.info("获取{}数据响应: {}", dataType, response);
+            return response;
+
+        } catch (Exception e) {
+            log.error("获取{}数据失败", dataType, e);
+            throw new BusinessException("获取" + dataType + "数据失败: " + e.getMessage());
+        }
     }
 }

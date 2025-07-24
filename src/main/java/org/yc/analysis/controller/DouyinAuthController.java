@@ -6,11 +6,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.yc.analysis.common.response.ResponseResult;
+import org.yc.analysis.dto.DouyinDataResponse;
 import org.yc.analysis.model.DouyinUserInfo;
 import org.yc.analysis.service.DouyinService;
 
@@ -66,21 +64,105 @@ public class DouyinAuthController {
         }
     }
 
-//    /**
-//     * 根据 openId 查询用户信息
-//     */
-//    @GetMapping("/user/{openId}")
-//    @Operation(summary = "查询用户信息", description = "根据openId查询抖音用户信息")
-//    public ResponseResult<DouyinUserInfo> getUserByOpenId(
-//            @Parameter(description = "抖音用户openId", required = true)
-//            @PathVariable String openId) {
-//        try {
-//            log.info("查询用户信息，openId: {}", openId);
-//            DouyinUserInfo userInfo = douyinService.getUserByOpenId(openId);
-//            return ResponseResult.success(userInfo);
-//        } catch (Exception e) {
-//            log.error("查询用户信息失败", e);
-//            throw e;
-//        }
-//    }
+    /**
+     * 根据 openId 查询用户信息
+     */
+    @GetMapping("/user/{openId}")
+    @Operation(summary = "查询用户信息", description = "根据openId查询抖音用户信息")
+    public ResponseResult<DouyinUserInfo> getUserByOpenId(
+            @Parameter(description = "抖音用户openId", required = true)
+            @PathVariable String openId) {
+        try {
+            log.info("查询用户信息，openId: {}", openId);
+            DouyinUserInfo userInfo = douyinService.getUserByOpenId(openId);
+            return ResponseResult.success(userInfo);
+        } catch (Exception e) {
+            log.error("查询用户信息失败", e);
+            throw e;
+        }
+    }
+
+    /**
+     * 获取粉丝数据
+     */
+    @GetMapping("/data/fans/{openId}")
+    @Operation(summary = "获取粉丝数据", description = "获取用户粉丝增长和取消关注数据")
+    public ResponseResult<DouyinDataResponse> getFansData(
+            @PathVariable String openId,
+            @RequestParam String beginDate,
+            @RequestParam String endDate) {
+        DouyinUserInfo userInfo = douyinService.getUserByOpenId(openId);
+        DouyinDataResponse data = douyinService.getFansData(userInfo.getAccessToken(), openId, beginDate, endDate);
+        return ResponseResult.success(data);
+    }
+
+    /**
+     * 获取视频数据
+     */
+    @GetMapping("/data/video/{openId}")
+    @Operation(summary = "获取视频数据", description = "获取用户视频播放数据")
+    public ResponseResult<DouyinDataResponse> getVideoData(
+            @PathVariable String openId,
+            @RequestParam String beginDate,
+            @RequestParam String endDate) {
+        DouyinUserInfo userInfo = douyinService.getUserByOpenId(openId);
+        DouyinDataResponse data = douyinService.getVideoData(userInfo.getAccessToken(), openId, beginDate, endDate);
+        return ResponseResult.success(data);
+    }
+
+    /**
+     * 获取点赞数据
+     */
+    @GetMapping("/data/like/{openId}")
+    @Operation(summary = "获取点赞数据", description = "获取用户获得点赞数据")
+    public ResponseResult<DouyinDataResponse> getLikeData(
+            @PathVariable String openId,
+            @RequestParam String beginDate,
+            @RequestParam String endDate) {
+        DouyinUserInfo userInfo = douyinService.getUserByOpenId(openId);
+        DouyinDataResponse data = douyinService.getLikeData(userInfo.getAccessToken(), openId, beginDate, endDate);
+        return ResponseResult.success(data);
+    }
+
+    /**
+     * 获取评论数据
+     */
+    @GetMapping("/data/comment/{openId}")
+    @Operation(summary = "获取评论数据", description = "获取用户获得评论数据")
+    public ResponseResult<DouyinDataResponse> getCommentData(
+            @PathVariable String openId,
+            @RequestParam String beginDate,
+            @RequestParam String endDate) {
+        DouyinUserInfo userInfo = douyinService.getUserByOpenId(openId);
+        DouyinDataResponse data = douyinService.getCommentData(userInfo.getAccessToken(), openId, beginDate, endDate);
+        return ResponseResult.success(data);
+    }
+
+    /**
+     * 获取分享数据
+     */
+    @GetMapping("/data/share/{openId}")
+    @Operation(summary = "获取分享数据", description = "获取用户获得分享数据")
+    public ResponseResult<DouyinDataResponse> getShareData(
+            @PathVariable String openId,
+            @RequestParam String beginDate,
+            @RequestParam String endDate) {
+        DouyinUserInfo userInfo = douyinService.getUserByOpenId(openId);
+        DouyinDataResponse data = douyinService.getShareData(userInfo.getAccessToken(), openId, beginDate, endDate);
+        return ResponseResult.success(data);
+    }
+
+    /**
+     * 获取主页访问数据
+     */
+    @GetMapping("/data/profile/{openId}")
+    @Operation(summary = "获取主页访问数据", description = "获取用户主页访问数据")
+    public ResponseResult<DouyinDataResponse> getProfileData(
+            @PathVariable String openId,
+            @RequestParam String beginDate,
+            @RequestParam String endDate) {
+        DouyinUserInfo userInfo = douyinService.getUserByOpenId(openId);
+        DouyinDataResponse data = douyinService.getProfileData(userInfo.getAccessToken(), openId, beginDate, endDate);
+        return ResponseResult.success(data);
+    }
 }
