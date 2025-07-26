@@ -1,0 +1,24 @@
+# services:
+#   network-holder:  # 仅用于保持网络存在的占位服务
+#     image: alpine:latest
+#     command: sleep infinity  # 容器永远挂起，不消耗CPU
+#     networks:
+#       - data-analysis-network  # 绑定目标网络
+
+
+# #否则通过docker命令创建
+# # docker network create \
+# #   --driver bridge \
+# #   --label project=data-analysis \
+# #   --label environment=production \
+# #   data-analysis-network
+
+
+
+# networks:
+#   data-analysis-network:
+#     name: data-analysis-network
+#     driver: bridge
+#     labels:
+#       - "project=data-analysis"
+#       - "environment=production"

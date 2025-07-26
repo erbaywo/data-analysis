@@ -1,0 +1,52 @@
+
+# 基础设施服务 - 仅包含数据库服务
+services:
+  # MySQL 数据库服务
+  mysql: #服务名，支持自定义，但是业务应用需要保持一致
+    image: mysql:8.0.32
+    container_name: mysql-service
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-data-analysis}
+      TZ: Asia/Shanghai
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      # 数据持久化 - 指定服务器绝对路径
+      - mysql-data:/var/lib/mysql
+      # 日志挂载 - 指定服务器绝对路径
+      - mysql-logs:/var/log/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-123456}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: #加入网络，当前文件中自定义的网络
+      - mysql-network
+    security_opt:
+      - no-new-privileges:true
+
+# 使用命名卷，定义数据卷
+volumes:
+  mysql-data:
+    driver: local
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: /data/mysql
+  mysql-logs:
+    driver: local
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: /var/log/mysql
+
+networks:
+  mysql-network: #当前应用自定义的网络标签
+    name: data-analysis-network #实际的网络名
+    external: true

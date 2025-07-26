@@ -1,0 +1,69 @@
+# 业务应用服务
+services:
+  # 应用服务
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: data-analysis-app:V2025.07.26
+    container_name: data-analysis-app
+    restart: always
+    ports:
+      - "${APP_PORT:-9080}:9080"
+    environment:
+      # 数据库配置 - 连接到基础设施网络中的mysql服务
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service:3306/${MYSQL_DATABASE:-data-analysis}?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD:-123456}
+      # 应用配置
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
+      - SERVER_PORT=9080
+      - TZ=Asia/Shanghai
+    volumes:
+      # 应用日志挂载 - 使用服务器绝对路径
+      - app-logs:/app/logs
+    networks: #应用网络，引用当前文件自定义的标签
+      - app-network
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - mysql-check # Mysql服务名保持一致
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9080/actuator/health", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # MySQL 连接检查服务
+  mysql-check:
+    image: mysql:8.0.32
+    container_name: mysql-connection-check
+    networks: #加入网络
+      - app-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-123456}
+    command: >
+      bash -c "
+        until mysqladmin ping -h infrastructure-mysql -u root -p${MYSQL_ROOT_PASSWORD:-123456} --silent; do
+          echo 'Waiting for MySQL to be ready...'
+          sleep 2
+        done
+        echo 'MySQL is ready!'
+      "
+    depends_on: []
+    restart: "no"
+# 应用日志数据卷
+volumes:
+  app-logs:
+    driver: local
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: /var/log/data-analysis
+
+#网络定义
+networks:
+  app-network: #应用容器，自定义网络定义标签
+    name: data-analysis-network #真实的网络名称
+    external: true

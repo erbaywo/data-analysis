@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 
+          http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  
+  <!-- 配置阿里云镜像 -->
+  <mirrors>
+    <mirror>
+      <id>aliyun-maven</id>
+      <mirrorOf>central</mirrorOf>
+      <name>阿里云Maven镜像</name>
+      <url>https://maven.aliyun.com/repository/central</url>
+    </mirror>
+    <mirror>
+      <id>aliyun-public</id>
+      <mirrorOf>*</mirrorOf>
+      <name>阿里云公共仓库</name>
+      <url>https://maven.aliyun.com/repository/public</url>
+    </mirror>
+  </mirrors>
+  
+  <!-- 配置仓库 -->
+  <profiles>
+    <profile>
+      <id>aliyun</id>
+      <repositories>
+        <repository>
+          <id>aliyun-central</id>
+          <url>https://maven.aliyun.com/repository/central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+  
+  <activeProfiles>
+    <activeProfile>aliyun</activeProfile>
+  </activeProfiles>
+</settings>
