@@ -45,7 +45,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-123456}
     command: >
       bash -c "
-        until mysqladmin ping -h infrastructure-mysql -u root -p${MYSQL_ROOT_PASSWORD:-123456} --silent; do
+        until mysqladmin ping -h mysql-service -u root -p${MYSQL_ROOT_PASSWORD:-123456} --silent; do
           echo 'Waiting for MySQL to be ready...'
           sleep 2
         done
