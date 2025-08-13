@@ -162,14 +162,22 @@ public class FeiShuService {
         fields.put("发布时间", timestamp);
 
         // 处理完播率
-        String completionRateStr = data.getCompletionRate().replace("%", "");
-        double completionRate = Double.parseDouble(completionRateStr) / 100.0;
-        fields.put("完播率", completionRate);
+        if(Objects.equals(data.getCompletionRate(), "-")) {
+            fields.put("完播率", 0.0);
+        } else {
+            String completionRateStr = data.getCompletionRate().replace("%", "");
+            double completionRate = Double.parseDouble(completionRateStr) / 100.0;
+            fields.put("完播率", completionRate);
+        }
 
         // 处理平均播放时长
-        String avgPlayDuration = data.getAvgPlayDuration().replace("秒", "");
-        double avgPlayDurationInDouble = Double.parseDouble(avgPlayDuration);
-        fields.put("平均播放时长", avgPlayDurationInDouble);
+        if (Objects.equals(data.getAvgPlayDuration(), "-")) {
+            fields.put("平均播放时长", 0.0);
+        } else {
+            String avgPlayDuration = data.getAvgPlayDuration().replace("秒", "");
+            double avgPlayDurationInDouble = Double.parseDouble(avgPlayDuration);
+            fields.put("平均播放时长", avgPlayDurationInDouble);
+        }
         fields.put("播放量", data.getPlayCount());
         fields.put("推荐", data.getRecommendCount());
         fields.put("喜欢", data.getLikeCount());
