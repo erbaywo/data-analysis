@@ -5,7 +5,13 @@ server:
 # Spring 配置
 spring:
   application:
-    name: oa-system  # 应用名称
+    name: data-analysis  # 应用名称
+
+  #文件上传大小限制（根据需求调整数值）
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
   # 数据库配置
   datasource:
@@ -45,11 +51,11 @@ feishu:
   app-id: cli_a8f65912ba29100b
   app-secret: PsIOYQ9TdFRq6YgYFIXeQgjXTZKMxc4H
   # 测试文档
-#  app-token: HU1lbdym8aWbpwsxxBIcKlRHnac
-#  account-table-id: tbl5JLXuFfBWQkVo
-#  video-table-id: tbl94LiWoyciS4aD
+  app-token: HU1lbdym8aWbpwsxxBIcKlRHnac
+  account-table-id: tbl5JLXuFfBWQkVo
+  video-table-id: tbl94LiWoyciS4aD
   # 生产文档
-  app-token: Upenb6egpanEAvsux99cVa92nAf
-  account-table-id: tblR3shaNbmhkSQC
-  video-table-id: tblMU0i9sUMvCLaB
+#  app-token: Upenb6egpanEAvsux99cVa92nAf
+#  account-table-id: tblR3shaNbmhkSQC
+#  video-table-id: tblMU0i9sUMvCLaB
 
